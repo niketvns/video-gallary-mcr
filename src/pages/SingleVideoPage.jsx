@@ -2,12 +2,18 @@ import {useParams} from "react-router-dom";
 import {useGlobalVideos} from "../contexts/videoLibraryContext.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
-import {MdOutlinePlaylistAdd, MdOutlineWatchLater, MdEditNote, MdWatchLater} from 'react-icons/md'
+import {MdOutlinePlaylistAdd, MdOutlineWatchLater, MdEditNote, MdWatchLater, MdDelete} from 'react-icons/md'
+import {FiEdit} from 'react-icons/fi'
+import NoteModel from "../components/NoteModel.jsx";
+import {useState} from "react";
 
 const SingleVideoPage = () => {
+    const [isNoteModel, setIsNoteModel] = useState(false)
     const {id} = useParams()
-    const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater} = useGlobalVideos()
+    const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater, notes, deleteNote} = useGlobalVideos()
     const videoDetails = findVideo(Number(id))
+
+    const notesInd = notes.filter(note=> note.videoId === videoDetails._id);
 
     return (
         <div className={'single-video-main flex gap-4'}>
@@ -32,14 +38,29 @@ const SingleVideoPage = () => {
                         <div className="playlist cursor-pointer">
                             <MdOutlinePlaylistAdd/>
                         </div>
-                        <div className="add_note cursor-pointer">
-                            <MdEditNote/>
+                        <div className="add_note cursor-pointer relative">
+                            <MdEditNote onClick={()=>setIsNoteModel(prevState => !prevState)}/>
+                            {isNoteModel && <NoteModel setIsNoteModel={setIsNoteModel} videoId={videoDetails._id}/>}
                         </div>
                     </div>
                 </div>
                 <div className="notes">
                     <h1 className='text-2xl font-semibold py-4'>My Notes</h1>
-                    <p className='text-black/30 px-4'>No notes added yet</p>
+                    <div className='all-note flex flex-col gap-2'>
+                        {
+                            notesInd.length ?
+                                notesInd.map(({note}) => (
+                                    <div className='flex justify-between items-center ml-4 bg-black/10 p-4 rounded'>
+                                        <p>{note}</p>
+                                        <div className='flex gap-4 justify-center items-center'>
+                                            <span><FiEdit className='text-lg cursor-pointer'/></span>
+                                            <span><MdDelete className='text-2xl cursor-pointer'/></span>
+                                        </div>
+                                    </div>
+                                )) :
+                                <p className='text-black/30 px-4'>No notes added yet</p>
+                        }
+                    </div>
                 </div>
             </div>
             <div className="more_videos flex flex-col gap-4">

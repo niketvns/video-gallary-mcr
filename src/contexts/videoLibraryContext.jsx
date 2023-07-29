@@ -9,6 +9,7 @@ const VideoLibraryContextProvider = ({children}) => {
     const [allVideos, setAllVideos] = useState(videos)
     const [watchLater, setWatchLater] = useState([])
     const [playlists, setPlaylists] = useState([])
+    const [notes, setNotes] = useState([])
 
     const findCategoryVideos = (categoryName) => {
         return allVideos.filter(video => video.category === categoryName )
@@ -30,8 +31,16 @@ const VideoLibraryContextProvider = ({children}) => {
         return watchLater.some(video => video._id === id )
     }
 
+    const addNote = (note) => {
+        setNotes(prevState => [note, ...prevState])
+    }
+
+    const deleteNote = (noteId) => {
+        setNotes(prevState => prevState.filter(note => note._id !== noteId))
+    }
+
     return (
-        <videoLibraryContext.Provider value={{allCategories, isInWatchLater, allVideos, watchLater, addToWatchLater, removeFromWatchLater, findCategoryVideos, findVideo, playlists}}>
+        <videoLibraryContext.Provider value={{allCategories, isInWatchLater, allVideos, watchLater, addToWatchLater, removeFromWatchLater, findCategoryVideos, findVideo, playlists, notes, addNote, deleteNote}}>
             {children}
         </videoLibraryContext.Provider>
     )
