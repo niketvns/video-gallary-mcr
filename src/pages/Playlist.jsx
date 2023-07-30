@@ -4,12 +4,13 @@ import {useGlobalVideos} from "../contexts/videoLibraryContext.jsx";
 import CreatePlaylistModel from "../components/CreatePlaylistModel.jsx";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {AiOutlineClose} from "react-icons/ai";
 
 const Playlist = () => {
     const [isCreatePlaylist, setIsCreatePlaylist] = useState(false)
     const navigate = useNavigate()
 
-    const {playlists} = useGlobalVideos()
+    const {playlists, deletePlaylist} = useGlobalVideos()
     return (
         <>
             <div className={'home-main flex gap-14'}>
@@ -20,15 +21,20 @@ const Playlist = () => {
                         {
                             playlists.length ?
                                 playlists.map(({_id, title, desc, videos }) => (
-                                    <div key={_id} className="playlistCard border p-2 rounded cursor-pointer w-44" onClick={()=>navigate(`/playlist/${_id}`)}>
-                                        {
-                                            videos.length ?
-                                                <img src={videos[0].thumbnail} alt="category_image" className='rounded w-full h-44 object-cover'/> :
-                                                <img src='/src/assets/empty-playlist.png' alt="category_image" className='rounded w-full h-44 object-cover'/>
-                                        }
-                                        <div className="details">
-                                            <h2 className='font-semibold'>{title}</h2>
-                                            <p className='text-black/60 line-clamp-1'>{desc}</p>
+                                    <div key={_id} className='relative'>
+                                        <div className="close flex justify-end -top-1 right-1 text-lg cursor-pointer" onClick={()=>deletePlaylist(_id)}>
+                                            <AiOutlineClose/>
+                                        </div>
+                                        <div className="playlistCard border p-2 rounded cursor-pointer w-44" onClick={()=>navigate(`/playlist/${_id}`)}>
+                                            {
+                                                videos.length ?
+                                                    <img src={videos[0].thumbnail} alt="category_image" className='rounded w-full h-44 object-cover'/> :
+                                                    <img src='/src/assets/empty-playlist.png' alt="category_image" className='rounded w-full h-44 object-cover'/>
+                                            }
+                                            <div className="details">
+                                                <h2 className='font-semibold'>{title}</h2>
+                                                <p className='text-black/60 line-clamp-1'>{desc}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 )):

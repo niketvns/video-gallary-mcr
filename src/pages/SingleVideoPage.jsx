@@ -15,7 +15,7 @@ const SingleVideoPage = () => {
     const [isNoteEdit, setIsNoteEdit] = useState(false)
     const [editedNote, setEditedNote] = useState()
     const {id} = useParams()
-    const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater, notes, deleteNote} = useGlobalVideos()
+    const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater, notes, deleteNote, editNote} = useGlobalVideos()
     const videoDetails = findVideo(Number(id))
 
     const notesInd = notes.filter(note=> note.videoId === videoDetails._id);
@@ -65,7 +65,10 @@ const SingleVideoPage = () => {
                                             <div>
                                                 {
                                                     isNoteEdit ?
-                                                        <GiCheckMark/> :
+                                                        <GiCheckMark onClick={()=> {
+                                                            editNote({_id, note: editedNote})
+                                                            setIsNoteEdit(false)
+                                                        }} className='cursor-pointer'/> :
                                                         <FiEdit className='text-lg cursor-pointer' onClick={()=> {
                                                             setIsNoteEdit(prevState => !prevState)
                                                             setEditedNote(note)

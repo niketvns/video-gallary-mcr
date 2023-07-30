@@ -4,7 +4,7 @@ import {useGlobalVideos} from "../contexts/videoLibraryContext.jsx";
 import {useParams} from "react-router-dom";
 
 const PlaylistDetailsPage = () => {
-    const {playlists, findPlaylist} = useGlobalVideos()
+    const {findPlaylist} = useGlobalVideos()
     const {playlistId} = useParams()
 
     const playlistDetails = findPlaylist(playlistId);
