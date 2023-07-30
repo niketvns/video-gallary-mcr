@@ -6,6 +6,7 @@ import SingleVideoPage from "./pages/SingleVideoPage.jsx";
 import Explore from "./pages/Explore.jsx";
 import Playlist from "./pages/Playlist.jsx";
 import WatchLater from "./pages/WatchLater.jsx";
+import PlaylistDetailsPage from "./pages/PlaylistDetailsPage.jsx";
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
                 <Route path={'/watch-later'} element={<WatchLater/>} />
                 <Route path={'/category/:categoryName'} element={<SingleCategoryPage/>} />
                 <Route path={'/video/watch/:id'} element={<SingleVideoPage/>} />
+                <Route path={'/playlist/:playlistId'} element={<PlaylistDetailsPage/>} />
             </Routes>
         </div>
     )

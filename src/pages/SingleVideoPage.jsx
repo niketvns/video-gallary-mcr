@@ -4,11 +4,16 @@ import Sidebar from "../components/Sidebar.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
 import {MdOutlinePlaylistAdd, MdOutlineWatchLater, MdEditNote, MdWatchLater, MdDelete} from 'react-icons/md'
 import {FiEdit} from 'react-icons/fi'
+import {GiCheckMark} from 'react-icons/gi'
 import NoteModel from "../components/NoteModel.jsx";
 import {useState} from "react";
+import AddToPlaylistModel from "../components/AddToPlaylistModel.jsx";
 
 const SingleVideoPage = () => {
     const [isNoteModel, setIsNoteModel] = useState(false)
+    const [isPlaylistModel, setIsPlaylistModel] = useState(false)
+    const [isNoteEdit, setIsNoteEdit] = useState(false)
+    const [editedNote, setEditedNote] = useState()
     const {id} = useParams()
     const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater, notes, deleteNote} = useGlobalVideos()
     const videoDetails = findVideo(Number(id))
@@ -35,8 +40,9 @@ const SingleVideoPage = () => {
                                     <MdOutlineWatchLater title='Add to Watch Later' onClick={()=>addToWatchLater(videoDetails)}/>
                             }
                         </div>
-                        <div className="playlist cursor-pointer">
-                            <MdOutlinePlaylistAdd/>
+                        <div className="playlist cursor-pointer relative">
+                            <MdOutlinePlaylistAdd onClick={()=>setIsPlaylistModel(prevState => !prevState)}/>
+                            {isPlaylistModel && <AddToPlaylistModel videoDetails={videoDetails} setIsPlaylistModel={setIsPlaylistModel}/>}
                         </div>
                         <div className="add_note cursor-pointer relative">
                             <MdEditNote onClick={()=>setIsNoteModel(prevState => !prevState)}/>
@@ -49,12 +55,25 @@ const SingleVideoPage = () => {
                     <div className='all-note flex flex-col gap-2'>
                         {
                             notesInd.length ?
-                                notesInd.map(({note}) => (
-                                    <div className='flex justify-between items-center ml-4 bg-black/10 p-4 rounded'>
-                                        <p>{note}</p>
+                                notesInd.map(({_id, note}) => (
+                                    <div key={_id} className='flex justify-between items-center ml-4 bg-black/10 p-4 rounded'>
+                                        {
+                                            isNoteEdit ?
+                                                <input type="text" name="note" id="note" placeholder='Edit Note...' value={editedNote} onChange={(e)=>setEditedNote(e.target.value)} className='p-1 rounded w-full mr-2'/> : <p>{note}</p>
+                                        }
                                         <div className='flex gap-4 justify-center items-center'>
-                                            <span><FiEdit className='text-lg cursor-pointer'/></span>
-                                            <span><MdDelete className='text-2xl cursor-pointer'/></span>
+                                            <div>
+                                                {
+                                                    isNoteEdit ?
+                                                        <GiCheckMark/> :
+                                                        <FiEdit className='text-lg cursor-pointer' onClick={()=> {
+                                                            setIsNoteEdit(prevState => !prevState)
+                                                            setEditedNote(note)
+                                                        }}/>
+                                                }
+
+                                            </div>
+                                            <div><MdDelete className='text-2xl cursor-pointer' onClick={()=>deleteNote(_id)}/></div>
                                         </div>
                                     </div>
                                 )) :

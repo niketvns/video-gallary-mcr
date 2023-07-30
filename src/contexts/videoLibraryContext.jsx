@@ -1,6 +1,7 @@
 import {createContext, useContext, useState} from "react";
 import {categories} from "../db/categories.js";
 import {videos} from "../db/videos.js";
+import {v4 as uuid} from "uuid";
 
 const videoLibraryContext = createContext()
 
@@ -39,8 +40,25 @@ const VideoLibraryContextProvider = ({children}) => {
         setNotes(prevState => prevState.filter(note => note._id !== noteId))
     }
 
+    const editNote = (newNote) => {
+        setNotes(prevState => prevState.map(note => note._id === newNote._id ? newNote : note))
+    }
+
+    const createPlaylist = (playlist) => {
+        setPlaylists(prevState => [{_id: uuid() ,...playlist, videos: []}, ...prevState])
+    }
+
+    const findPlaylist = (playlistId) => {
+        return playlists.find(playlist => playlist._id === playlistId);
+    }
+
+    const addToPlaylist = (video, playlistId) => {
+        setPlaylists(prevState => prevState.map(playlist => playlist._id === playlistId ? {...playlist, videos: [video, ...playlist.videos] } : playlist))
+        alert('Added to '+findPlaylist(playlistId).title)
+    }
+
     return (
-        <videoLibraryContext.Provider value={{allCategories, isInWatchLater, allVideos, watchLater, addToWatchLater, removeFromWatchLater, findCategoryVideos, findVideo, playlists, notes, addNote, deleteNote}}>
+        <videoLibraryContext.Provider value={{allCategories, isInWatchLater, allVideos, watchLater, addToWatchLater, removeFromWatchLater, findCategoryVideos, findVideo, playlists, notes, addNote, deleteNote, editNote, createPlaylist, findPlaylist, addToPlaylist}}>
             {children}
         </videoLibraryContext.Provider>
     )
