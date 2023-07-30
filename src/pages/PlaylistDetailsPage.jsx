@@ -14,7 +14,7 @@ const PlaylistDetailsPage = () => {
             <Sidebar/>
             <div className='explore-main flex-1 flex flex-col gap-5'>
                 <h1 className='text-2xl font-semibold'>{playlistDetails.title}</h1>
-                <p><b>Description: </b>{playlistDetails.desc}</p>
+                {playlistDetails.desc && <p><b>Description: </b>{playlistDetails.desc}</p>}
                 <div className='all-watch-later flex flex-wrap gap-6'>
                     {
                         playlistDetails.videos.length ?
