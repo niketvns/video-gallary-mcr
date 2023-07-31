@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {categories} from "../db/categories.js";
 import {videos} from "../db/videos.js";
 import {v4 as uuid} from "uuid";
@@ -11,6 +11,24 @@ const VideoLibraryContextProvider = ({children}) => {
     const [watchLater, setWatchLater] = useState([])
     const [playlists, setPlaylists] = useState([])
     const [notes, setNotes] = useState([])
+
+    useEffect(()=>{
+        setWatchLater(JSON.parse(localStorage.getItem('watchLater')) ?? [])
+        setPlaylists(JSON.parse(localStorage.getItem('playlists')) ?? [])
+        setNotes(JSON.parse(localStorage.getItem('notes')) ?? [])
+    },[])
+
+    useEffect(()=>{
+        if (watchLater.length){
+            localStorage.setItem('watchLater', JSON.stringify(watchLater))
+        }
+        if (notes.length){
+            localStorage.setItem('notes', JSON.stringify(notes))
+        }
+        if (playlists.length){
+            localStorage.setItem('playlists', JSON.stringify(playlists))
+        }
+    },[watchLater, notes, playlists])
 
     const findCategoryVideos = (categoryName) => {
         return allVideos.filter(video => video.category === categoryName )
@@ -50,6 +68,7 @@ const VideoLibraryContextProvider = ({children}) => {
 
     const deletePlaylist = (playlistId) => {
         setPlaylists(prevState => prevState.filter(({_id}) => _id !== playlistId))
+        localStorage.setItem('playlists', JSON.stringify([]))
     }
 
     const findPlaylist = (playlistId) => {
