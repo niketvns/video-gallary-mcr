@@ -44,6 +44,9 @@ const VideoLibraryContextProvider = ({children}) => {
 
     const removeFromWatchLater = (videoId) => {
         setWatchLater(prevState => prevState.filter(video => video._id !== videoId))
+        if (watchLater.length === 1){
+            localStorage.setItem('watchLater', JSON.stringify([]))
+        }
     }
 
     const isInWatchLater = (id) => {
@@ -56,6 +59,9 @@ const VideoLibraryContextProvider = ({children}) => {
 
     const deleteNote = (noteId) => {
         setNotes(prevState => prevState.filter(note => note._id !== noteId))
+        if (notes.length === 1){
+            localStorage.setItem('notes', JSON.stringify([]))
+        }
     }
 
     const editNote = (newNote) => {
@@ -72,7 +78,7 @@ const VideoLibraryContextProvider = ({children}) => {
     }
 
     const findPlaylist = (playlistId) => {
-        return playlists.find(playlist => playlist._id === playlistId);
+       return playlists.find(playlist => playlist._id === playlistId)
     }
 
     const addToPlaylist = (video, playlistId) => {

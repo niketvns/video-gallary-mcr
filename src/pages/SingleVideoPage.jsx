@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useGlobalVideos} from "../contexts/videoLibraryContext.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
@@ -17,6 +17,7 @@ const SingleVideoPage = () => {
     const {id} = useParams()
     const {findVideo, allVideos, addToWatchLater, removeFromWatchLater, isInWatchLater, notes, deleteNote, editNote} = useGlobalVideos()
     const videoDetails = findVideo(Number(id))
+    const navigate = useNavigate()
 
     const notesInd = notes.filter(note=> note.videoId === videoDetails._id);
 
@@ -90,7 +91,7 @@ const SingleVideoPage = () => {
                 <div className="all_videos flex flex-col gap-2">
                     {
                         allVideos.map(video => (
-                            <div key={video._id} className='flex gap-2 cursor-pointer'>
+                            <div key={video._id} className='flex gap-2 cursor-pointer' onClick={()=>navigate(`/video/watch/${video._id}`)}>
                                 <img src={video.thumbnail} alt="" className='w-52 rounded'/>
                                 <div className="text-blue-500 details">
                                     <h3 className='text-sm'>{video.title}</h3>
